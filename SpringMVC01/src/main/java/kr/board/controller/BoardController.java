@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import kr.board.entity.Board;
 
 @Controller
-public class BoardController {
+public class BoardController {//BoardController 클래스는 servlet-context.xml에 의해 scan되며 컨테이너에 자동생성된다.
 	
 	// /boardList.do 라는 클라이언트의 요청이 오면? 요청받고 메서드 실행 -> '핸들러 매핑'
 	// HandlerMapping 클래스가 처리
