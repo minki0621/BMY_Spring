@@ -4,9 +4,9 @@ import java.util.List;
 
 import kr.board.entity.Board;
 
-// @Mapper - Mybatis API
+//@Mapper //Mybatis API
 public interface BoardMapper {
 
-	public List<Board> getLists(); //전체 리스트 가져오기
+	public List<Board> getLists(); //전체리스트
 	
 }
