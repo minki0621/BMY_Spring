@@ -7,18 +7,19 @@
   <title>Spring MVC01</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Latest compiled JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
  
-<div class="container">
+<div class="container mt-3">
   <h2>Spring MVC01</h2>
-  <div class="panel panel-default">
-    <div class="panel-heading">BOARD</div>
-    <div class="panel-body">Panel Content</div>
-    <div class="panel-footer">인프런_스프1탄_박매일</div>
+  <div class="card card-default">
+    <div class="card-header">BOARD</div>
+    <div class="card-body">card Content</div>
+    <div class="card-footer">인프런_스프1탄_박매일</div>
   </div>
 </div>
 
