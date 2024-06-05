@@ -34,7 +34,7 @@
             <td>${vo.idx}</td>
             <td><a href="boardContent.do?idx=${vo.idx}" >${vo.title}</a></td> <!-- GET:쿼리스트링 -->
             <td>${vo.writer}</td>
-            <td>${vo.indate}</td>
+            <td>${fn:split(vo.indate, " ")[0] }</td>
             <td>${vo.count}</td>
            </tr>
           </c:forEach>

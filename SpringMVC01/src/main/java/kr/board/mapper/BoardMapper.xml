@@ -15,6 +15,10 @@
   	SELECT idx, title, content, writer, indate, count FROM myboard WHERE idx=#{idx}
   </select>
   
+  <update id="boardCount" parameterType="int">
+  	UPDATE myboard SET count = count+1 WHERE idx=#{idx}
+  </update>
+  
   <delete id="boardDelete" parameterType="int">
   	DELETE FROM myboard WHERE idx=#{idx}
   </delete>

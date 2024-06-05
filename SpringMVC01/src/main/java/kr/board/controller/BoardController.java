@@ -59,6 +59,9 @@ public class BoardController{	// new BoardController();
 		//결과데이터를 넘겨야 하니까 객체 바인딩 필요 (Model 이용)
 		model.addAttribute("vo", vo);
 		
+		//조회수 증가
+		mapper.boardCount(idx);
+		
 		return "boardContent";
 	}
 	
