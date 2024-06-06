@@ -17,18 +17,30 @@
   
   <script type="text/javascript">
   	$(document).ready(function(){ // 문서가 시작되면 가장먼저  loadList()를 호출한다. 
-  		loadList();
+  		loadBoardList();
+  		loadNewsList();
   		
   	});
   	
-  	function loadList(){ // 호출 내용은 바로바로
+  	function loadBoardList(){ // 호출 내용은 바로바로
   		
   		$.ajax({ // (비동기 전송)서버와 통신 : 게시판 리스트 가져오기 
   			url : "boardList.do", // == @GetMapping("/boardList.do")
   			type : "GET",
   			dataType : "json",
   			success : makeView, // boardList.do가 실행되고 처리된 값, return을 받아서 처리하는 함수 -> 콜백함수  
-  			error : function(){ alert('error'); }
+  			error : function(xhr, status, error){ alert('에러 : ' + error ); }
+  			
+  		});
+  	}
+  	
+  	function loadNewsList(){
+  		$.ajax({
+  			url : "getNewsList.do",
+  			type : "GET",
+  			dateType : "json",
+  			success : makeNewsView,
+  			error : function(xhr, status, error){ alert('에러 : ' + error ); }
   			
   		});
   	}
@@ -63,6 +75,36 @@
   		$("#view").html(htmlList);
   	}
   	
+  	function makeNewsView(news){
+  		
+  		let htmlList = "<table class='table table-bordered'>";
+  		htmlList += "<tr>";
+  		htmlList += "<th> 번호 </th>";
+  		htmlList += "<th> 제목 </th>";
+  		htmlList += "<th> 내용 </th>";
+  		htmlList += "<th> 신문사 </th>";
+  		htmlList += "<th> 작성일 </th>";
+  		htmlList += "<th> 조회수 </th>";
+  		htmlList += "</tr>";
+  		
+  		$.each(news, function(index, obj){
+  	  		htmlList += "<tr>";
+  	  		htmlList += "<td>"+obj.idx+"</td>";
+  	  		htmlList += "<td>"+obj.title+"</td>";
+  	  		htmlList += "<td>"+obj.content+"</td>";
+  	  		htmlList += "<td>"+obj.brand+"</td>";
+  	  			let objDate = obj.indate.split(' ')[0];
+  	  		htmlList += "<td >"+objDate+"</td>";
+  	  		htmlList += "<td>"+obj.count+"</td>";
+  	  		htmlList += "</tr>";
+  			
+  		});
+  		
+  		htmlList += "</table>";
+  		
+  		$("#news").html(htmlList);
+  	}
+  	
   </script>
 </head>
 <body>
@@ -72,6 +114,7 @@
   <div class="card card-default">
     <div class="card-header">BOARD</div>
     <div class="card-body" id="view">card Content</div>
+    <div class="card-body" id="news">card Content</div>
     <div class="card-footer">인프런_스프1탄_박매일</div>
   </div>
 </div>
