@@ -19,3 +19,5 @@ values('게시판 연습','게시판 연습','선생님');
 
 select * from myboard order by idx desc;
 
+DELETE FROM myboard WHERE idx >= 8;
+

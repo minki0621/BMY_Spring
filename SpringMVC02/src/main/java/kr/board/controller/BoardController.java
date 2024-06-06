@@ -38,5 +38,12 @@ public class BoardController{	// new BoardController();
 		return list; // JSON 데이터 형식으로 변환(jackson API)할 것이다.
 	}
 	
+	@PostMapping("/boardInsert.do")
+	public @ResponseBody void boardInsert(Board vo) {
+		mapper.boardInsert(vo); // 등록성공
+		
+		//return 할 거 없고 @ResponseBody가 있으므로 제어권이 success로 넘어감
+	}
+	
 	
 }
