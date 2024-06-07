@@ -18,10 +18,10 @@
   <script type="text/javascript">
   	$(document).ready(function(){ // 문서가 시작되면 가장먼저 동작할 함수 호출 
   		loadBoardList();
-  		loadNewsList();
   		showBoard();
-  		goInsert();
-  		
+		goInsert();  
+		
+		
   	});
   	
   	function loadBoardList(){ // 호출 내용은 바로바로
@@ -34,15 +34,6 @@
   		});
   	}
   	
-  	function loadNewsList(){
-  		$.ajax({
-  			url : "getNewsList.do",
-  			type : "GET",
-  			dateType : "json",
-  			success : makeNewsView,
-  			error : function(xhr, status, error){ alert('에러 : ' + error ); }
-  		});
-  	}
   	
   	function makeView(data){ // boardList.do의 return값 list가 data 변수에 들어가있다.
   		//받은 데이터로 게시판 리스트를 동적으로 만들자!
@@ -59,58 +50,33 @@
   		$.each(data, function(index, obj){
   	  		htmlList += "<tr>";
   	  		htmlList += "<td>"+obj.idx+"</td>";
-  	  		htmlList += "<td><a href='#'>"+obj.title+"</a></td>";
+  	  		htmlList += "<td><a href='javascript:goContent("+obj.idx+")'>"+obj.title+"</a></td>";
   	  		htmlList += "<td>"+obj.writer+"</td>";
   	  			let objDate = obj.indate.split(' ')[0];
   	  		htmlList += "<td >"+objDate+"</td>";
   	  		htmlList += "<td>"+obj.count+"</td>";
   	  		htmlList += "</tr>";
+  	  		
+  	  		htmlList += "<tr id='c"+obj.idx+"' style='display:none'>";
+  	  		htmlList += "<th>내용</th>";
+  	  		htmlList += "<td colspan='4'>";
+  	  		htmlList += "<textarea rows='7' class='form-control' readonly >" + obj.content + "</textarea>";
+  	  		htmlList += "<br>"
+  	  		htmlList += "<a href='javascript:goModify("+obj.idx+")' id='m"+obj.idx+"' class='btn btn-warning btn-sm'> 수정 </a> &nbsp;"
+  	  		htmlList += "<a href='javascript:goDelete("+obj.idx+")' id='d"+obj.idx+"' class='btn btn-danger btn-sm'> 삭제 </a> &nbsp;"
+  	  		htmlList += "</td>";
+  	  		htmlList += "</tr>";
+  	  		
   		});
   		
   		htmlList += "</table>";
   		
   		$("#view").html(htmlList);
   		
-  		$("#view").css("display", "block");  //글쓰기 완료후 리스트창 오픈
-  		$("#news").css("display", "block");
-  		$("#writeForm").css("display", "none"); //글쓰기 완료후 글쓰기 폼 닫기
+  		$("#view").css("display", "block");  // 글쓰기 완료후 리스트창 오픈
+  		$("#writeForm").css("display", "none"); // 글쓰기 완료후 글쓰기 폼 닫기
   		
   	}
-  	
-  	function makeNewsView(news){
-  		
-  		let htmlList = "<table class='table table-bordered'>";
-  		htmlList += "<tr>";
-  		htmlList += "<th> 번호 </th>";
-  		htmlList += "<th> 제목 </th>";
-  		htmlList += "<th> 신문사 </th>";
-  		htmlList += "<th> 작성일 </th>";
-  		htmlList += "<th> 조회수 </th>";
-  		htmlList += "</tr>";
-  		
-  		$.each(news, function(index, obj){
-  	  		htmlList += "<tr>";
-  	  		htmlList += "<td>"+obj.idx+"</td>";
-  	  		htmlList += "<td>"+obj.title+"</td>";
-  	  		htmlList += "<td>"+obj.brand+"</td>";
-  	  			let objDate = obj.indate.split(' ')[0];
-  	  		htmlList += "<td >"+objDate+"</td>";
-  	  		htmlList += "<td>"+obj.count+"</td>";
-  	  		htmlList += "</tr>";
-  			
-  		});
-  		
-  		
-  		
-  		htmlList += "</table>";
-  		
-  		$("#news").html(htmlList);
-  		
-  		$("#view").css("display", "block"); //글쓰기 완료후 리스트창 오픈
-  		$("#news").css("display", "block");
-  		$("#writeForm").css("display", "none"); //글쓰기 완료후 글쓰기 폼 닫기
-  	}
-  	
   	
   	/* 게시물 글쓰기 버튼 클릭시 이벤트 */
   	function showBoard(){
@@ -121,19 +87,17 @@
   	
 	  	function showForm(){
 	  		$("#view").css("display", "none"); //감춰
-	  		$("#news").css("display", "none");
 	  		$("#writeForm").css("display", "block"); //보여줘
 	  		
-	  		document.getElementById('writeBoardButton').innerText = "목록으로";
+	  		document.getElementById('writeBoardButton').innerText = "목록으로"; // 버튼 텍스트 수정 
 	  		
 	  		document.getElementById('writeBoardButton').removeEventListener('click', showForm);
 	  		document.getElementById('writeBoardButton').addEventListener('click', goBackMain);
 	  		
 	  	}
 	  	
-	  	function goBackMain(){ //재활용하기 위해서 전역메서드 화
+	  	function goBackMain(){  
 	  		$("#view").css("display", "block"); 
-	  		$("#news").css("display", "block");
 	  		$("#writeForm").css("display", "none"); 
 	  		
 	  		document.getElementById('writeBoardButton').innerText = "글쓰기";
@@ -143,7 +107,6 @@
 	  		
 	  		/*목록 누를 떄 리스트 갱신!*/
 	  		loadBoardList();
-	  		loadNewsList();
 	  	}
 	  	
 	  	window.goBackMain = goBackMain; //재활용하기 위해서 전역메서드 화
@@ -159,7 +122,7 @@
   		
   		function insertBoard(){
   			
-  			let fData = $("#frm").serialize(); //모든 파라미터 직렬화
+  			let fData = $("#frm").serialize(); //폼의 모든 파라미터 직렬화
   	  		
  	  		$.ajax({
  	  			url : "boardInsert.do",
@@ -183,17 +146,32 @@
   		}
   	}
   	
+  	/* 상세보기 : content 보이기_숨기기 */
+  	function goContent(idx){ //1, 2, 3 ...
+  		if($("#c"+idx).css("display") == "none"){
+	  		$("#c"+idx).css("display", "table-row"); // block이 아니라 table-row 
+  		}else{
+	  		$("#c"+idx).css("display", "none"); // block이 아니라 table-row 
+  		}
+  	}
   	
+  	/* 글 수정 */
+  	function goModify(idx){  			
+  		
+  	}
+  	
+  	/* 글 삭제 */
+  	function goDelete(idx){
+  		
+  	}
   </script>
 </head>
 <body>
- 
 <div class="container mt-3">
   <h2>Spring MVC02</h2>
   <div class="card card-default">
     <div class="card-header">BOARD</div>
     <div class="card-body" id="view">card Content</div>
-    <div class="card-body" id="news">card Content</div>
     
     <div class="card-body"><button id="writeBoardButton" class='btn btn-primary btn-sm'>글쓰기</button></div>
     
@@ -215,7 +193,7 @@
 	        </tr>
 	        <tr>
 	         	<td colspan="2" align="center">
-	         		<button type="button" id="insertBoard" class="btn btn-success btn-sm" onclick=goInsert()>등록</button>
+	         		<button type="button" id="insertBoard" class="btn btn-success btn-sm">등록</button>
 	         		<button type="reset" id="resetForm" class="btn btn-warning btn-sm">리셋</button>
 	         	</td>
 	        </tr>
