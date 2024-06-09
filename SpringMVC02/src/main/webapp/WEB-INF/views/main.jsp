@@ -50,7 +50,7 @@
   		$.each(data, function(index, obj){
   	  		htmlList += "<tr>";
   	  		htmlList += "<td>"+obj.idx+"</td>";
-  	  		htmlList += "<td><a href='javascript:goContent("+obj.idx+")'>"+obj.title+"</a></td>";
+  	  		htmlList += "<td id='ti"+obj.idx+"'><a href='javascript:goContent("+obj.idx+")'>"+obj.title+"</a></td>";
   	  		htmlList += "<td>"+obj.writer+"</td>";
   	  			let objDate = obj.indate.split(' ')[0];
   	  		htmlList += "<td >"+objDate+"</td>";
@@ -62,7 +62,7 @@
   	  		htmlList += "<td colspan='4'>";
   	  		htmlList += "<textarea rows='7' class='form-control' readonly >" + obj.content + "</textarea>";
   	  		htmlList += "<br>"
-  	  		htmlList += "<a href='javascript:goModify("+obj.idx+")' id='m"+obj.idx+"' class='btn btn-warning btn-sm'> 수정 </a> &nbsp;"
+  	  		htmlList += "<a href='javascript:goUpdateForm("+obj.idx+")' id='m"+obj.idx+"' class='btn btn-warning btn-sm'> 수정 </a> &nbsp;"
   	  		htmlList += "<a href='javascript:goDelete("+obj.idx+")' id='d"+obj.idx+"' class='btn btn-danger btn-sm'> 삭제 </a> &nbsp;"
   	  		htmlList += "</td>";
   	  		htmlList += "</tr>";
@@ -109,7 +109,7 @@
 	  		loadBoardList();
 	  	}
 	  	
-	  	window.goBackMain = goBackMain; //재활용하기 위해서 전역메서드 화
+	  	window.goBackMain = goBackMain; //재활용하기 위해서 전역메서드화 ()
 	  	
   	}
   	
@@ -131,8 +131,8 @@
  	  			success : function(response){
  	  				alert('게시물 작성에 성공');
  	  				
- 	  				window.goBackMain(); //쓰고나면 리스트 갱신해
- 	  			},
+ 	  				window.goBackMain(); //쓰고나면 리스트 갱신해, 목록으로 텍스트를 글쓰기로 다시 바꿔. 
+ 	  				},
  	  			error : function(){alert('error');}
  	  		});
   			
@@ -155,14 +155,66 @@
   		}
   	}
   	
-  	/* 글 수정 */
-  	function goModify(idx){  			
+  	/* 글 수정 (폼생성) */
+  	function goUpdateForm(idx){  		
+  		$("#c"+idx+" textarea").prop("readonly", false); //or textarea에 id값을 주고 $().attr("readonly", false)로 수정 
+  		$("#c"+idx+" textarea").css("border-color", "blue"); //그냥 강조의미 
+  		
+  		let titleValueOrin = $("#ti"+idx).text(); //원래제목 
+  		let newTitle = "<input type='text' id='newTi"+idx+"' class='form-control' value='"+titleValueOrin+"' style='border-color:blue'> </input>"; //제목창 form
+  		$("#ti"+idx).html(newTitle); //제목창 호출 
+  		
+  		//document.getElementById('d'+idx).innerText = "취소";   -> 불필요한 기능같아 
+  		
+  		let updateButton = "<a href='javascript:boardUpdate("+idx+")' id='up"+idx+"' class='btn btn-warning btn-sm'> 등록 </a> &nbsp;"
+  		$("#m"+idx).html(updateButton);
   		
   	}
+  	/* 글 수정 (폼 업로드_Ajax) */
+	function boardUpdate(idx){
+  		
+  		let newContent = $("#c"+idx+" textarea").val(); //일반적으로 textarea의 값은 val()로 가져온다. 
+
+  		let newTitle = $("#newTi"+idx).val();
+  		
+  		$.ajax({
+  			url : "boardUpdate.do",
+  			method : "POST",
+  			data : {
+  				"idx" : idx,
+  				"title" : newTitle,
+  				"content" : newContent,
+  			},
+  			success : function(){
+  				alert('수정 성공');
+  				loadBoardList();
+  			}, 
+  			error : function(){alert('error : ' + idx);}
+  		});
+	}
   	
   	/* 글 삭제 */
   	function goDelete(idx){
+  		if(confirm(idx + '번 글을 삭제하시겠습니까?')){
+  			deleteBoard(idx);
+  		} else {
+  			alert('삭제가 취소되었습니다.');
+  		}
   		
+  		function deleteBoard(idx){
+  			
+	  		$.ajax({
+	  			url : "boardDelete.do",
+	  			type : "get",
+	  			data : { "idx" : idx }, //주의 : data값은 객체형식이어야 한다.
+	  			success : function(response){
+	 	  				alert( idx+'번 게시물을 삭제하였습니다.');
+	 	  				loadBoardList(); //쓰고나면 리스트 갱신해
+	 	  				
+	 	  				},
+	 	  		error : function(){alert('error : ' + idx);}
+	  		});
+  		}
   	}
   </script>
 </head>
@@ -170,7 +222,10 @@
 <div class="container mt-3">
   <h2>Spring MVC02</h2>
   <div class="card card-default">
-    <div class="card-header">BOARD</div>
+    <div class="card-header">BOARD
+    	<!-- <span><button popovertarget="myPopover" popovertargetaction="show">popover모달창 show</button> <button popovertarget="myPopover" popovertargetaction="hide">popover모달창 hide</button></span>
+    	<div id="myPopover" popover>아이디 : <input type="text" >  비밀번호 : <input type="text"></div> -->
+    </div>
     <div class="card-body" id="view">card Content</div>
     
     <div class="card-body"><button id="writeBoardButton" class='btn btn-primary btn-sm'>글쓰기</button></div>

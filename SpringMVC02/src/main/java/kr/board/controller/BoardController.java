@@ -45,5 +45,14 @@ public class BoardController{	// new BoardController();
 		//return 할 거 없고 @ResponseBody가 있으므로 제어권이 success로 넘어감
 	}
 	
+	@GetMapping("/boardDelete.do")
+	public @ResponseBody void boardDelete(int idx) {
+		mapper.boardDelete(idx);
+		
+	}
 	
+	@PostMapping("/boardUpdate.do")
+	public @ResponseBody void boardUpdate(Board vo) {
+		mapper.boardUpdate(vo);
+	}
 }
