@@ -19,7 +19,7 @@
   	$(document).ready(function(){ // 문서가 시작되면 가장먼저 동작할 함수 호출 
   		loadBoardList();
   		showBoard();
-		goInsert();  
+			goInsert();  
 		
 		
   	});
@@ -131,7 +131,7 @@
  	  			success : function(response){
  	  				alert('게시물 작성에 성공');
  	  				
- 	  				window.goBackMain(); //쓰고나면 리스트 갱신해, 목록으로 텍스트를 글쓰기로 다시 바꿔. 
+ 	  				window.goBackMain(); //쓰고나면 리스트 갱신해 그리고 목록으로 텍스트를 글쓰기로 다시 바꿔. 
  	  				},
  	  			error : function(){alert('error');}
  	  		});
@@ -150,6 +150,7 @@
   	function goContent(idx){ //1, 2, 3 ...
   		if($("#c"+idx).css("display") == "none"){
 	  		$("#c"+idx).css("display", "table-row"); // block이 아니라 table-row 
+	  		// $("#c"+idx+" textarea").attr("display", true);
   		}else{
 	  		$("#c"+idx).css("display", "none"); // block이 아니라 table-row 
   		}
@@ -166,12 +167,16 @@
   		
   		//document.getElementById('d'+idx).innerText = "취소";   -> 불필요한 기능같아 
   		
-  		let updateButton = "<a href='javascript:boardUpdate("+idx+")' id='up"+idx+"' class='btn btn-warning btn-sm'> 등록 </a> &nbsp;"
-  		$("#m"+idx).html(updateButton);
+  		let updateButton = "<a href='javascript:boardUpdate("+idx+")' id='up"+idx+"' class='btn btn-primary btn-sm'> 등록 </a> &nbsp;"
+  		$("#m"+idx).replaceWith(updateButton);
+  		
+  		let cancelButton = "<a href='javascript:loadBoardList()' class='btn btn-warning btn-sm'>취소</a>";
+  		//$("#d"+idx).html(cancelButton);
+  		$("#d"+idx).replaceWith(cancelButton);
   		
   	}
   	/* 글 수정 (폼 업로드_Ajax) */
-	function boardUpdate(idx){
+		function boardUpdate(idx){
   		
   		let newContent = $("#c"+idx+" textarea").val(); //일반적으로 textarea의 값은 val()로 가져온다. 
 
