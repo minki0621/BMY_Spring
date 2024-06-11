@@ -18,15 +18,15 @@
   <script type="text/javascript">
   	$(document).ready(function(){ // 문서가 시작되면 가장먼저 동작할 함수 호출 
   		loadBoardList();
-  		showBoard();
-			goInsert();  
+  		//showBoard();
+		//goInsert();  
 		
 		
   	});
   	
   	function loadBoardList(){ // 호출 내용은 바로바로
   		$.ajax({ // (비동기 전송)서버와 통신 : 게시판 리스트 가져오기 
-  			url : "boardList.do", // == @GetMapping("/boardList.do")
+  			url : "board/all", // == @GetMapping("/boardList.do")
   			type : "GET",
   			dataType : "json",
   			success : makeView, // boardList.do가 실행되고 처리된 값, return을 받아서 처리하는 함수 -> 콜백함수  
@@ -52,15 +52,14 @@
   	  		htmlList += "<td>"+obj.idx+"</td>";
   	  		htmlList += "<td id='ti"+obj.idx+"'><a href='javascript:goContent("+obj.idx+")'>"+obj.title+"</a></td>";
   	  		htmlList += "<td>"+obj.writer+"</td>";
-  	  			let objDate = obj.indate.split(' ')[0];
-  	  		htmlList += "<td >"+objDate+"</td>";
-  	  		htmlList += "<td>"+obj.count+"</td>";
+  	  		htmlList += "<td >"+obj.indate.split(' ')[0]+"</td>";
+  	  		htmlList += "<td id='cnt"+obj.idx+"'>"+obj.count+"</td>";
   	  		htmlList += "</tr>";
   	  		
   	  		htmlList += "<tr id='c"+obj.idx+"' style='display:none'>";
   	  		htmlList += "<th>내용</th>";
   	  		htmlList += "<td colspan='4'>";
-  	  		htmlList += "<textarea rows='7' class='form-control' readonly >" + obj.content + "</textarea>";
+  	  		htmlList += "<textarea id='con"+obj.idx+"' rows='7' class='form-control' readonly ></textarea>";
   	  		htmlList += "<br>"
   	  		htmlList += "<a href='javascript:goUpdateForm("+obj.idx+")' id='m"+obj.idx+"' class='btn btn-warning btn-sm'> 수정 </a> &nbsp;"
   	  		htmlList += "<a href='javascript:goDelete("+obj.idx+")' id='d"+obj.idx+"' class='btn btn-danger btn-sm'> 삭제 </a> &nbsp;"
@@ -117,21 +116,19 @@
    	function goInsert(){
   		
   		const insertButton = document.getElementById('insertBoard');
-  		
   		insertButton.addEventListener('click', insertBoard);
   		
   		function insertBoard(){
-  			
   			let fData = $("#frm").serialize(); //폼의 모든 파라미터 직렬화
   	  		
  	  		$.ajax({
- 	  			url : "boardInsert.do",
+ 	  			url : "board/new",
  	  			type : "post",
  	  			data : fData,
  	  			success : function(response){
  	  				alert('게시물 작성에 성공');
  	  				
- 	  				window.goBackMain(); //쓰고나면 리스트 갱신해 그리고 목록으로 텍스트를 글쓰기로 다시 바꿔. 
+ 	  				window.goBackMain(); //쓰고나면 리스트 갱신해, 목록으로 텍스트를 글쓰기로 다시 바꿔. 
  	  				},
  	  			error : function(){alert('error');}
  	  		});
@@ -149,14 +146,32 @@
   	/* 상세보기 : content 보이기_숨기기 */
   	function goContent(idx){ //1, 2, 3 ...
   		if($("#c"+idx).css("display") == "none"){
+  			
+  			// 서버에서 content가져와서 붙여넣기 
+  			$.ajax({
+  				url : "board/"+idx,
+  				type : "GET",
+  				//data : {"idx" : idx},
+  				datatype: "JSON",
+  				success : function(voData){
+  					$("#con"+idx).val(voData.content);
+  					
+  					$("#cnt"+idx).text(voData.count);
+  				},
+  				error : function(){alert("error");}
+  				
+  			});
+  			
+  	
+  			
 	  		$("#c"+idx).css("display", "table-row"); // block이 아니라 table-row 
-	  		// $("#c"+idx+" textarea").attr("display", true);
   		}else{
 	  		$("#c"+idx).css("display", "none"); // block이 아니라 table-row 
   		}
+
   	}
   	
-  	/* 글 수정 (폼생성) */
+  	/* 글 수정 (폼 생성) */
   	function goUpdateForm(idx){  		
   		$("#c"+idx+" textarea").prop("readonly", false); //or textarea에 id값을 주고 $().attr("readonly", false)로 수정 
   		$("#c"+idx+" textarea").css("border-color", "blue"); //그냥 강조의미 
@@ -165,31 +180,29 @@
   		let newTitle = "<input type='text' id='newTi"+idx+"' class='form-control' value='"+titleValueOrin+"' style='border-color:blue'> </input>"; //제목창 form
   		$("#ti"+idx).html(newTitle); //제목창 호출 
   		
-  		//document.getElementById('d'+idx).innerText = "취소";   -> 불필요한 기능같아 
-  		
   		let updateButton = "<a href='javascript:boardUpdate("+idx+")' id='up"+idx+"' class='btn btn-primary btn-sm'> 등록 </a> &nbsp;"
+  		// $("#m"+idx).html(updateButton);
   		$("#m"+idx).replaceWith(updateButton);
   		
   		let cancelButton = "<a href='javascript:loadBoardList()' class='btn btn-warning btn-sm'>취소</a>";
-  		//$("#d"+idx).html(cancelButton);
   		$("#d"+idx).replaceWith(cancelButton);
   		
   	}
   	/* 글 수정 (폼 업로드_Ajax) */
-		function boardUpdate(idx){
+	function boardUpdate(idx){
   		
   		let newContent = $("#c"+idx+" textarea").val(); //일반적으로 textarea의 값은 val()로 가져온다. 
-
   		let newTitle = $("#newTi"+idx).val();
   		
   		$.ajax({
-  			url : "boardUpdate.do",
-  			method : "POST",
-  			data : {
+  			url : "board/update",
+  			method : "PUT",
+  			contentType : 'application/json;charset=utf-8', // 넘기는 data의 타입 제정 
+  			data : JSON.stringify({ // data를 JSON으로 바꿔주기 
   				"idx" : idx,
   				"title" : newTitle,
   				"content" : newContent,
-  			},
+  			}),
   			success : function(){
   				alert('수정 성공');
   				loadBoardList();
@@ -209,9 +222,9 @@
   		function deleteBoard(idx){
   			
 	  		$.ajax({
-	  			url : "boardDelete.do",
-	  			type : "get",
-	  			data : { "idx" : idx }, //주의 : data값은 객체형식이어야 한다.
+	  			url : "board/" + idx, // PathVariable 값 
+	  			type : "DELETE",
+	  			//data : { "idx" : idx }, //주의 : data값은 객체형식이어야 한다. RESTful방식에선 생략 
 	  			success : function(response){
 	 	  				alert( idx+'번 게시물을 삭제하였습니다.');
 	 	  				loadBoardList(); //쓰고나면 리스트 갱신해
