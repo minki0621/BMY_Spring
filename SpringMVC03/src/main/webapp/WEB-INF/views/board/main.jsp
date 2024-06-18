@@ -16,13 +16,10 @@
   <script type="text/javascript">
   	$(document).ready(function(){ // 문서가 시작되면 가장먼저 동작할 함수 호출 
   		loadBoardList();
-  		//showBoard();
-		//goInsert();  
-		
 		
   	});
   	
-  	function loadBoardList(){ // 호출 내용은 바로바로
+  	function loadBoardList(){ 
   		$.ajax({ // (비동기 전송)서버와 통신 : 게시판 리스트 가져오기 
   			url : "board/all", // == @GetMapping("/boardList.do")
   			type : "GET",
@@ -236,9 +233,8 @@
 </head>
 <body>
 
-<jsp:include page="../common/header.jsp"></jsp:include>
-
 <div class="container mt-3">
+<jsp:include page="../common/header.jsp"></jsp:include>
   <h2>Spring MVC03</h2>
   <div class="panel panel-default">
     <div class="panel-header">BOARD
