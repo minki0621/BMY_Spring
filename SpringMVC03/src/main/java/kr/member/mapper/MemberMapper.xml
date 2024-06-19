@@ -6,5 +6,10 @@
   	SELECT * FROM mem_tbl WHERE memID = #{memID}
   </select>
   
+  <insert id="register" parameterType="kr.member.entity.Memeber">
+  	INSERT INTO 
+  		mem_tbl(memID, memPassword, memName, memAge, memGender, memEamil, memProfile)
+  		VALUES(#{memID}, #{memPassword}, #{memName}, #{memAge}, #{memGender}, #{memEmail}, #{memProfile})
+  </insert>
   
 </mapper>

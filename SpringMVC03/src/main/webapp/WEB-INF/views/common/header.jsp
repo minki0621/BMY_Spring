@@ -23,7 +23,7 @@
       </ul>
       
       <!--로그인 안된 상태-->
-      <c:if test="${empty mvo}">
+      <c:if test="${empty user}"> <!-- HttpSession값 확인 -->
 	      <ul class="nav navbar-nav navbar-right">
 	        <li class="dropdown">
 	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">접속하기<span class="caret"></span></a>
@@ -36,7 +36,7 @@
       </c:if>
       
       <!--로그인 된 상태-->
-      <c:if test="${!empty mvo}">
+      <c:if test="${!empty user}">
 	      <ul class="nav navbar-nav navbar-right">
 	        <li class="dropdown">
 	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">접속하기<span class="caret"></span></a>

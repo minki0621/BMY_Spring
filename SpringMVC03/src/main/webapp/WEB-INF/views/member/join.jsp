@@ -18,6 +18,7 @@
   <script type="text/javascript">
   $(document).ready(function(){
 	  idDupliCheck(); //아이디 중복 체크 
+	  passwordCheck(); //비밀번호 재확인 
 	  
   });
   
@@ -38,15 +39,15 @@
   				//중복유무 출력 (result=0 : 이미존재, reuslt=1 : 양식오류, result=2 : 사용가능)
   				switch(result){
   					case 0 :
-  						$("#dupliAlert").html("이미 존재하는 아이디 입니다.");
+  						$("#dupliAlert").text("이미 존재하는 아이디 입니다.");
   						$("#checkType").attr("class", "modal-content panel-warning"); //색 바꾸기
   						break;
   					case 1 : 
-  						$("#dupliAlert").html("아이디로 적합하지 않습니다. 다시 확인해 주세요.");
+  						$("#dupliAlert").text("아이디로 적합하지 않습니다. 다시 확인해 주세요.");
   						$("#checkType").attr("class", "modal-content panel-danger");
   						break;
   					case 2 :
-  						$("#dupliAlert").html("사용가능한 아이디입니다.");
+  						$("#dupliAlert").text("사용가능한 아이디입니다.");
   						$("#checkType").attr("class", "modal-content panel-success");
   						break;
   				}
@@ -63,19 +64,24 @@
   }
   
   /* 비밀번호 확인 체크  */
-  function pwCheck(){
-	  const pw1 = document.getElementById('memPW1');
-	  const pw2 = document.getElementById('memPW2');
+	function passwordCheck(){
+	  const memPW1 = document.getElementById('memPW1');
+	  const memPW2 = document.getElementById('memPW2');
 	  
-	  pw1.addEventListener('onKeyUp', passwordCheck);
-	  pw2.addEventListener('onKeyUp', passwordCheck);
+	  memPW1.addEventListener('keyup', passwordCheck2 ); //소문자 
+	  memPW2.addEventListener('keyup', passwordCheck2 );
 	  
-	  function passwordCheck(){
-		  
+	  function passwordCheck2(){
+		  const pw1 = $('#memPW1').val();
+		  const pw2 = $('#memPW2').val();
+		  if(pw1 !== pw2){
+			  $('#pwShow').text("비밀번호가 서로 일치하지 않습니다.");
+		  } else {
+			  $('#pwShow').text("비밀번호가 서로 일치합니다.");
+			  $('#memPassword').val(memPassword1); //서로 일치할 때, 찐 PW값에 PW1넣어주기
+		  }
 	  }
-	  
   }
-  
   
   </script>
   
@@ -89,6 +95,7 @@
     <div class="panel-body">
     
     	<form action="${contextPath }/member/memRegister.do" method="post">
+    		<input type="hidden" id="memPassword" name="memPassword" value="" /> <!-- 조건식: PW1과 PW2가 같으면 찐 PW값 넣어줄거임 -->
 				<table class="table table-bordered" style="text-align:center;  border: 1px solid #dddddd; ">
 					<tr>
 						<td style="width: 100px; vertical-align:middle; ">아이디</td>
@@ -137,7 +144,7 @@
 					</tr>
 					<tr>
 						<td colspan="3" style="text-align: left;">
-							<button type="submit" class="btn btn-primary btn-sm pull-right" >등록</button>
+							<span id="pwShow" style="color: red"></span><button type="submit" class="btn btn-primary btn-sm pull-right" >등록</button>
 						</td>
 					</tr>
 					

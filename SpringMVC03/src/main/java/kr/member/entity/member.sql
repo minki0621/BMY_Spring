@@ -18,3 +18,5 @@ INSERT INTO mem_tbl(memID, memPassWord, memName, memAge, memGender, memEmail, me
 VALUES('raphael', '4260', '신민기', 33, '남자', 'shinmingi0621@gmail.com', null);
 
 commit;
+SELECT * FROM mem_tbl WHERE memID = 'raphael' AND memPassWord = 'XX' OR 1=1 --' AND memName = '신민기';
+
