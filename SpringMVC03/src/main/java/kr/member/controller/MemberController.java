@@ -32,7 +32,7 @@ public class MemberController {
 			return 0; //이미 존재하는 회원
 		} 
 		if(memID.trim().isEmpty() || memID.contains(" ")) {
-			return 1; //아이디는 빈문자열을 사용할 수 없음
+			return 1; //아이디는 공백을 사용할 수 없음
 		}
 		return 2; //사용 가능한 아이디
 	}
@@ -49,16 +49,16 @@ public class MemberController {
 			rttr.addFlashAttribute("msgType", "메시지 누락 발생");
 			rttr.addFlashAttribute("msg", "모든 내용을 입력하세요.");
 			
-			return "redirect:/memJoin.do"; // ${smgType}, ${msg} 사용가능, Flash니까 단 한번!! 
+			return "redirect:/memJoin.do"; // ${smgType}, ${msg} EL로 사용가능, Flash니까 한번만. 
 		}
 		m.setMemProfile(""); //사진이미지는 없다는 의미 -> "" (안그러면 null이 들어가니까 공백으로 넣어주자.)
 		// 회원을 테이블에 저장
 		int result = mapper.register(m);
 		if(result == 1) { //회원가입 성공
 			rttr.addFlashAttribute("msgType", "success");
-			rttr.addFlashAttribute("msg", "회원가입이 정상적으로 완료되었습니다.");
+			rttr.addFlashAttribute("msg", m.getMemName()+"님 회원가입이 정상적으로 완료되었습니다.");
 			//회원가입 성공하면 바로 로그인 처리해주기
-			session.setAttribute("user", m); //  ${!empty user} 체크해서 로그인 했냐 안했냐 확인 
+			session.setAttribute("user", m); //  ${!empty user} jsp에서 체크해서 로그인 했냐 안했냐 확인 
 			return "redirect:/";
 		}else {
 			rttr.addFlashAttribute("msgType", "fale");

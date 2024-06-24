@@ -78,7 +78,7 @@
 			  $('#pwShow').text("비밀번호가 서로 일치하지 않습니다.");
 		  } else {
 			  $('#pwShow').text("비밀번호가 서로 일치합니다.");
-			  $('#memPassword').val(memPassword1); //서로 일치할 때, 찐 PW값에 PW1넣어주기
+			  $('#memPassword').val(pw1); //서로 일치할 때, 찐 PW값에 PW1넣어주기 to Submit
 		  }
 	  }
   }
