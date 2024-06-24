@@ -63,7 +63,7 @@ public class MemberController {
 		}else {
 			rttr.addFlashAttribute("msgType", "fale");
 			rttr.addFlashAttribute("msg", "회원가입 실패 : 이미 존재하는 회원입니다.");
-			return "memRegister.do";
+			return "redirect:/memJoin.do";
 		}
 	}
 	
