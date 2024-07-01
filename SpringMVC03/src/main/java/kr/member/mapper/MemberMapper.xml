@@ -1,4 +1,4 @@
- <?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.member.mapper.MemberMapper">
   
@@ -6,7 +6,7 @@
   	SELECT * FROM mem_tbl WHERE memID = #{memID}
   </select>
   
-  <insert id="register" parameterType="kr.member.entity.Memeber">
+  <insert id="register" parameterType="kr.member.entity.Member">
   	INSERT INTO 
   		mem_tbl(memID, memPassword, memName, memAge, memGender, memEamil, memProfile)
   		VALUES(#{memID}, #{memPassword}, #{memName}, #{memAge}, #{memGender}, #{memEmail}, #{memProfile})

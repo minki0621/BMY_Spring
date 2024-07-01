@@ -95,8 +95,8 @@
     <div class="panel-body">
     
     	<form action="${contextPath }/member/memRegister.do" method="post">
-    		<input type="hidden" id="memPassword" name="memPassword" value="" /> <!-- 조건식: PW1과 PW2가 같으면 찐 PW값 넣어줄거임 -->
 				<table class="table table-bordered" style="text-align:center;  border: 1px solid #dddddd; ">
+ 				<input type="hidden" id="memPassword" name="memPassword" value="" /> <!-- 조건식: PW1과 PW2가 같으면 찐 PW값 넣어줄거임 -->
 					<tr>
 						<td style="width: 100px; vertical-align:middle; ">아이디</td>
 						<td><input id="memID" name="memID" class="form-control" type="text" maxlength="20" placeholder="아이디를 입력해 주세요. 최대20자"/></td>

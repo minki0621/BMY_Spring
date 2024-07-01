@@ -37,6 +37,7 @@ public class MemberController {
 		return 2; //사용 가능한 아이디
 	}
 	
+	//회원가입 처리
 	@RequestMapping("/memRegister.do")
 	public String memRegister(Member m, RedirectAttributes rttr, HttpSession session) {
 		if(m.getMemID() == null || m.getMemID().equals("") || 
@@ -45,13 +46,14 @@ public class MemberController {
 			m.getMemAge() == 0 || 
 			m.getMemGender() == null || m.getMemGender().equals("") ||
 			m.getMemEmail() == null || m.getMemEmail().equals("") ) {
-			//누락메세지를 가지고 가기? => 객체바인딩(Model, HttpServletRequest, HttpSession)은 jsp에 하는데.. 어떡하지?
+			//누락메세지를 가지고 가기 => 객체바인딩(Model, HttpServletRequest, HttpSession)은 jsp에 하는데.. 어떡하지?
 			rttr.addFlashAttribute("msgType", "메시지 누락 발생");
 			rttr.addFlashAttribute("msg", "모든 내용을 입력하세요.");
 			
 			return "redirect:/memJoin.do"; // ${smgType}, ${msg} EL로 사용가능, Flash니까 한번만. 
 		}
 		m.setMemProfile(""); //사진이미지는 없다는 의미 -> "" (안그러면 null이 들어가니까 공백으로 넣어주자.)
+		
 		// 회원을 테이블에 저장
 		int result = mapper.register(m);
 		if(result == 1) { //회원가입 성공
