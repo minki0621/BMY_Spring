@@ -19,6 +19,7 @@
   <div class="card card-default">
     <div class="card-header">BOARD</div>
     <div class="card-body">
+    
     	<form action="${pageContext.request.contextPath}/boardUpdate.do" method="post">
     	<input type="hidden" name="idx" value="${vo.idx }">
     		<table class="table">

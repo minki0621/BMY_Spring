@@ -2,7 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> <!--JSTL함수 라이브러리-->
-<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%-- <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> --%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,7 +29,7 @@
     		</tr>
     		<tr>
     			<th>내용</th>
-    			<td style="white-space: pre;">${vo.content}</td>
+    			<td style="white-space: pre;">${vo.content}</td> <!-- 공백과 줄바꿈을 유지하는 style -->
     		</tr>
     		<tr>
     			<th>작성자</th>

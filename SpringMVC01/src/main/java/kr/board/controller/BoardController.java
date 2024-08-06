@@ -17,25 +17,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import kr.board.entity.Board;
 import kr.board.mapper.BoardMapper;
 
+// DispatcherServlet에서 응답을 받아옴
 @Controller
 public class BoardController{	// new BoardController();
-	// /boardList.do
+	
 	@Autowired
 	private BoardMapper mapper; // DI
 	
+	
+	// boardList.do 요청이 오면 핸들러매핑에 의해서 아래 메서드를 실행 
 	@GetMapping("/")
 	public String home() {
 		return "home";
 	}
 	
-	// HandlerMapping
-	@RequestMapping("/boardList.do")
+	@RequestMapping("/boardList.do") 
 	public String boardList(Model model) {
 		List<Board> list=mapper.getLists();
 		model.addAttribute("list", list);
 		return "boardList"; // /WEB-INF/views/boardList.jsp -> forward
 	}
-	
 	
 	@GetMapping("/boardForm.do")
 	public String boardFrom() {
@@ -48,7 +49,7 @@ public class BoardController{	// new BoardController();
 	} 
 	
 	@PostMapping("/boardInsert.do")
-	public String boardInsert(Board vo) { // title, content, writer => param수집(Board)
+	public String boardInsert(Board vo) { // title, content, writer => 내부적으로 자동 param수집(Board)
 		mapper.boardInsert(vo);
 		return "redirect:/boardList.do"; // redirect
 	}
@@ -56,10 +57,10 @@ public class BoardController{	// new BoardController();
 	@GetMapping("/boardContent.do")
 	public String boardContent(@RequestParam("idx") int idx, Model model) {
 		Board vo = mapper.boardContent(idx);
-		//결과데이터를 넘겨야 하니까 객체 바인딩 필요 (Model 이용)
+		//결과값은 Board 클래스의 객체에 담고, 이를 객체바인딩(Model 이용)
 		model.addAttribute("vo", vo);
 		
-		//조회수 증가
+		//조회수 증가 함수
 		mapper.boardCount(idx);
 		
 		return "boardContent";
