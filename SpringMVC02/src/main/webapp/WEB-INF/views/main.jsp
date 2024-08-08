@@ -18,9 +18,7 @@
   <script type="text/javascript">
   	$(document).ready(function(){ // 문서가 시작되면 가장먼저 동작할 함수 호출 
   		loadBoardList();
-  		//showBoard();
-		//goInsert();  
-		
+  		showBoard();
 		
   	});
   	
@@ -37,7 +35,7 @@
   	
   	function makeView(data){ // boardList.do의 return값 list가 data 변수에 들어가있다.
   		//받은 데이터로 게시판 리스트를 동적으로 만들자!
-  		
+  		//console.log(data)
   		let htmlList = "<table class='table table-bordered'>";
   		htmlList += "<tr>";
   		htmlList += "<th> 번호 </th>";
@@ -47,9 +45,10 @@
   		htmlList += "<th> 조회수 </th>";
   		htmlList += "</tr>";
   		
-  		$.each(data, function(index, obj){
+  		$.each(data, function(index, obj){ // index 혹은 key 
   	  		htmlList += "<tr>";
-  	  		htmlList += "<td>"+obj.idx+"</td>";
+  	  		console.log('index: ' + index + '-> ' + 'obj.idx: ' + obj.idx);
+  	  		htmlList += "<td>"+ obj.idx+"</td>";
   	  		htmlList += "<td id='ti"+obj.idx+"'><a href='javascript:goContent("+obj.idx+")'>"+obj.title+"</a></td>";
   	  		htmlList += "<td>"+obj.writer+"</td>";
   	  		htmlList += "<td >"+obj.indate.split(' ')[0]+"</td>";
